@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MiApiUniversidad")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc99c6a5687bb2d598c2b814179ce4b8289890a5")]
 [assembly: System.Reflection.AssemblyProductAttribute("MiApiUniversidad")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MiApiUniversidad")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
