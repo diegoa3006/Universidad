@@ -26,10 +26,10 @@ namespace MiApiUniversidad.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]//Todo correcto
-        public ActionResult <IEnumerable<DepartamentoDto>> GetDepartamentos()
+        public async Task<ActionResult <IEnumerable<DepartamentoDto>>> GetDepartamentos()
         {
             _logger.LogInformation("Obtener los Departamentos");
-            return Ok(_db.Departamentos.ToList());
+            return Ok(await _db.Departamentos.ToListAsync());
         }
 
 
@@ -39,7 +39,7 @@ namespace MiApiUniversidad.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//
         [ProducesResponseType(StatusCodes.Status404NotFound)]//
 
-        public ActionResult<DepartamentoDto> GetDepartamento(int id)
+        public async Task<ActionResult<DepartamentoDto>> GetDepartamento(int id)
         {
             ////si el id es = 0 con el bad request retornara un error de 400
             if (id == 0)
@@ -49,7 +49,7 @@ namespace MiApiUniversidad.Controllers
             }
 
             //var departamento = DepartamentoStore.departamentoList.FirstOrDefault(d => d.Id == id);
-            var departamento = _db.Departamentos.FirstOrDefault(v => v.Id == id);
+            var departamento = await _db.Departamentos.FirstOrDefaultAsync(v => v.Id == id);
 
 
             /// Not fount  se encuentra ningun registro error 404
@@ -67,14 +67,14 @@ namespace MiApiUniversidad.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]//
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]//
 
-        public ActionResult<DepartamentoDto> CrearDepartamento([FromBody] DepartamentoDto departamentoDto)
+        public async Task<ActionResult<DepartamentoDto>> CrearDepartamento([FromBody] DepartamentoCreateDto departamentoDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (_db.Departamentos.FirstOrDefault(v=>v.Nombre.ToLower() == departamentoDto.Nombre.ToLower()) !=null)
+            if (await _db.Departamentos.FirstOrDefaultAsync(v=>v.Nombre.ToLower() == departamentoDto.Nombre.ToLower()) !=null)
             {
                 ModelState.AddModelError("NombreExiste", "El departamento con ese nombre ya existe!");
                 return BadRequest(ModelState);
@@ -84,10 +84,7 @@ namespace MiApiUniversidad.Controllers
             {
                 return BadRequest(departamentoDto);
             }
-            if (departamentoDto.Id > 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+
             //departamentoDto.Id = DepartamentoStore.departamentoList.OrderByDescending(v => v.Id).FirstOrDefault().Id + 1;
             //DepartamentoStore.departamentoList.Add(departamentoDto);
 
@@ -97,10 +94,10 @@ namespace MiApiUniversidad.Controllers
                 Descripcion = departamentoDto.Descripcion
             };
 
-            _db.Departamentos.Add(modelo);
-            _db.SaveChanges();
+            await _db.Departamentos.AddAsync(modelo);
+            await _db.SaveChangesAsync();
 
-            return CreatedAtRoute("GetDepartamento", new {id = departamentoDto.Id}, departamentoDto);
+            return CreatedAtRoute("GetDepartamento", new {id = modelo.Id}, modelo);
         }
 
 
@@ -108,20 +105,20 @@ namespace MiApiUniversidad.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteDepartamento(int id)
+        public async Task<IActionResult> DeleteDepartamento(int id)
         {
             if (id==0)
             {
                 return BadRequest();
             }
-            var departamento = _db.Departamentos.FirstOrDefault(v => v.Id == id);
+            var departamento = await _db.Departamentos.FirstOrDefaultAsync(v => v.Id == id);
             if (departamento==null)
             {
                 return NotFound();
             }
             //DepartamentoStore.departamentoList.Remove(departamento);
             _db.Departamentos.Remove(departamento);
-            _db.SaveChanges();
+           await _db.SaveChangesAsync();
 
             return NoContent();
         }
@@ -131,7 +128,7 @@ namespace MiApiUniversidad.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdateDepartamento(int id, [FromBody] DepartamentoDto departamentoDto)
+        public async Task<IActionResult> UpdateDepartamento(int id, [FromBody] DepartamentoUpdateDto departamentoDto)
         {
             if (departamentoDto==null  || id!= departamentoDto.Id)
             {
@@ -148,7 +145,7 @@ namespace MiApiUniversidad.Controllers
                 Descripcion = departamentoDto.Descripcion
             };
             _db.Departamentos.Update(modelo);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return NoContent();
         }
@@ -156,7 +153,7 @@ namespace MiApiUniversidad.Controllers
         [HttpPatch("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult UpdatePartialDepartamento(int id, JsonPatchDocument<DepartamentoDto> patchDto)
+        public async Task<IActionResult> UpdatePartialDepartamento(int id, JsonPatchDocument<DepartamentoUpdateDto> patchDto)
         {
             if (patchDto == null || id == 0)
             {
@@ -164,9 +161,9 @@ namespace MiApiUniversidad.Controllers
             }
             //var departamento = DepartamentoStore.departamentoList.FirstOrDefault(v => v.Id == id);
 
-            var departamento = _db.Departamentos.AsNoTracking().FirstOrDefault(v => v.Id == id);
+            var departamento = await _db.Departamentos.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
 
-            DepartamentoDto departamentoDto = new()
+            DepartamentoUpdateDto departamentoDto = new()
             {
                 Id = departamento.Id,
                 Nombre = departamento.Nombre,
@@ -190,7 +187,7 @@ namespace MiApiUniversidad.Controllers
             };
 
             _db.Departamentos.Update(modelo);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return NoContent();
         }
