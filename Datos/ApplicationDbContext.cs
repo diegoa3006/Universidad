@@ -5,12 +5,13 @@ namespace MiApiUniversidad.Datos
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
-            
+
         }
-        public DbSet<Departamento> Departamentos { get; set;}
+        public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Materia> Materias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,21 @@ namespace MiApiUniversidad.Datos
                 }
 
             );
+
+            modelBuilder.Entity<Materia>().HasData(
+                new Materia()
+                {
+                    Id = 1,
+                    Nombre = "Creditos 1",
+                    Creditos = 3
+                },
+                new Materia()
+                {
+                    Id = 2,
+                    Nombre = "Creditos 2",
+                    Creditos = 4
+                }
+           );
         }
 
     }

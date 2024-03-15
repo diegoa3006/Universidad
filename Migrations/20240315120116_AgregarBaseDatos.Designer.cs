@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MiApiUniversidad.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240302045854_AgregarBaseDatos")]
+    [Migration("20240315120116_AgregarBaseDatos")]
     partial class AgregarBaseDatos
     {
         /// <inheritdoc />
@@ -43,6 +43,40 @@ namespace MiApiUniversidad.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departamentos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Facultad Derecho",
+                            Nombre = "Derecho"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "San Camilo",
+                            Nombre = "Trabajo Social"
+                        });
+                });
+
+            modelBuilder.Entity("MiApiUniversidad.Modelos.Materia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Creditos")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materias");
                 });
 #pragma warning restore 612, 618
         }

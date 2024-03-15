@@ -7,18 +7,18 @@
 namespace MiApiUniversidad.Migrations
 {
     /// <inheritdoc />
-    public partial class AlimentarTablaDepartamento : Migration
+    public partial class AlimentarTablas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "Departamentos",
-                columns: new[] { "Id", "Descripcion", "Nombre" },
+                table: "Materias",
+                columns: new[] { "Id", "Creditos", "Nombre" },
                 values: new object[,]
                 {
-                    { 1, "Facultad Derecho", "Derecho" },
-                    { 2, "San Camilo", "Trabajo Social" }
+                    { 1, 3, "Creditos 1" },
+                    { 2, 4, "Creditos 2" }
                 });
         }
 
@@ -26,12 +26,12 @@ namespace MiApiUniversidad.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "Departamentos",
+                table: "Materias",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "Departamentos",
+                table: "Materias",
                 keyColumn: "Id",
                 keyValue: 2);
         }

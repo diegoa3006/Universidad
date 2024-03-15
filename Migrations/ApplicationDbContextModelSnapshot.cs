@@ -55,6 +55,40 @@ namespace MiApiUniversidad.Migrations
                             Nombre = "Trabajo Social"
                         });
                 });
+
+            modelBuilder.Entity("MiApiUniversidad.Modelos.Materia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Creditos")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materias");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Creditos = 3,
+                            Nombre = "Creditos 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Creditos = 4,
+                            Nombre = "Creditos 2"
+                        });
+                });
 #pragma warning restore 612, 618
         }
     }
